@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="/"> <!-- Added to ensure consistent resource loading -->
+    <title data-lang="title">Agadir Delivery</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Reverted to relative path -->
+    <link rel="stylesheet" href="all-min.css">
+    <link rel="" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+</head>
+<body class="rtl" style="width: fit-content;height: fit-content;">
+    <header>
+        <div class="logo">
+            <h1><i class="fas fa-motorcycle"></i> <span data-lang="title">OTM Delivery</span></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" data-page="home"><i class="fas fa-home"></i> <span data-lang="home">Home</span></a></li>
+                <li><a href="#" data-page="grocery"><i class="fas fa-carrot"></i> <span data-lang="grocery">Grocery</span></a></li>
+                <li><a href="#" data-page="food"><i class="fas fa-utensils"></i> <span data-lang="food">Food</span></a></li>
+                <li><a href="#" data-page="clothes"><i class="fas fa-tshirt"></i> <span data-lang="clothes">Clothes</span></a></li>
+                <li><a href="#" data-page="cart"><i class="fas fa-shopping-cart"></i> <span data-lang="cart">Cart</span> (<span id="cart-count">0</span>)</a></li>
+            </ul>
+            <div class="search-container" id="search-container">
+                <input type="text" id="search-bar" data-lang-placeholder="search-placeholder">
+                <i class="fas fa-search" onclick="searchProducts()"></i>
+            </div>
+            <select id="language-switcher" onchange="changeLanguage(this.value)">
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="ar">العربية</option>
+            </select>
+            <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button id="profile-toggle" class="profile-toggle" aria-label="Profile or Settings">
+                <i class="fas fa-user"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Slide-out Bar with New Categories -->
+    <div id="category-slide-bar" class="category-slide-bar">
+        <button id="toggle-slide-bar" class="toggle-slide-bar-btn"><i class="fas fa-bars"></i></button>
+        <div class="slide-bar-content">
+            <button data-page="special-offers" class="slide-bar-item"><i class="fas fa-gift"></i> <span data-lang="special-offers">Special Offers</span></button>
+            <button data-page="animals" class="slide-bar-item"><i class="fas fa-paw"></i> <span data-lang="animals">Animals</span></button>
+            <button data-page="accessories" class="slide-bar-item"><i class="fas fa-gem"></i> <span data-lang="accessories">Accessories</span></button>
+            <button data-page="electronics" class="slide-bar-item"><i class="fas fa-laptop"></i> <span data-lang="electronics">Electronics</span></button>
+            <button data-page="special-events" class="slide-bar-item"><i class="fas fa-calendar-alt"></i> <span data-lang="special-events">Special Events</span></button>
+            <button data-page="make-up" class="slide-bar-item"><i class="fas fa-paint-brush"></i> <span data-lang="make-up">Make-up</span></button>
+            <button data-page="babies" class="slide-bar-item"><i class="fas fa-baby"></i> <span data-lang="babies">Babies</span></button>
+            <button data-page="toys" class="slide-bar-item"><i class="fas fa-robot"></i> <span data-lang="toys">Toys</span></button>
+            <button data-page="kids-clothing" class="slide-bar-item"><i class="fas fa-child"></i> <span data-lang="kids-clothing">Kids Clothing</span></button>
+            <button data-page="meats" class="slide-bar-item"><i class="fas fa-drumstick-bite"></i> <span data-lang="meats">Meats</span></button>
+            <button data-page="sports" class="slide-bar-item"><i class="fas fa-football-ball"></i> <span data-lang="sports">Sports</span></button>
+            <button data-page="drinks" class="slide-bar-item"><i class="fas fa-glass-whiskey"></i> <span data-lang="drinks">Drinks</span></button>
+        </div>
+    </div>
+
+    <main>
+        <div id="home" class="page active">
+            <h2 data-lang="home-title">Welcome to Agadir Delivery</h2>
+            <p data-lang="home-desc">Fast delivery of groceries, food, and clothes right to your door in Agadir!</p>
+            <div class="home-features">
+                <div class="feature-item">
+                    <i class="fas fa-clock"></i>
+                    <span data-lang="fast-delivery">Fast Delivery</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-shopping-basket"></i>
+                    <span data-lang="wide-selection">Wide Selection</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-tag"></i>
+                    <span data-lang="affordable-prices">Affordable Prices</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="grocery" class="page">
+            <h2 data-lang="grocery">Grocery</h2>
+            <div class="products" id="grocery-products">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div id="food" class="page">
+            <h2 data-lang="food">Food</h2>
+            <div class="products" id="food-products">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div id="clothes" class="page">
+            <h2 data-lang="clothes">Clothes</h2>
+            <div class="products" id="clothes-products">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div id="cart" class="page">
+            <h2 data-lang="cart">Your Cart</h2>
+            <div id="cart-items"></div>
+            <p id="cart-total-display"><span data-lang="total">Total:</span> <span id="cart-total">0.00</span> DH</p>
+            <form id="order-form">
+                <input type="text" id="name" data-lang-placeholder="name" required>
+                <input type="tel" id="phone" data-lang-placeholder="phone" required>
+                <input type="text" id="location" data-lang-placeholder="location" required>
+                <button type="button" id="location-btn" onclick="getUserLocation()" data-lang="use-location">Use My Location</button>
+                <button type="submit" id="place-order-btn" data-lang="place-order">Place Order</button>
+            </form>
+        </div>
+
+        <div id="special-offers" class="page">
+            <h2 data-lang="special-offers">Special Offers</h2>
+            <div class="products" id="special-offers-products">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div id="animals" class="page">
+            <h2 data-lang="animals">Animals</h2>
+            <div class="products" id="animals-products">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div id="accessories" class="page">
+            <h2 data-lang="accessories">Accessories</h2>
+            <div class="products" id="accessories-products">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div id="electronics" class="page">
+            <h2 data-lang="electronics">Electronics</h2>
+            <div class="products" id="electronics-products">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div id="special-events" class="page">
+            <h2 data-lang="special-events">Special Events</h2>
+            <div class="products" id="special-events-products">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div id="make-up" class="page">
+            <h2 data-lang="make-up">Make-up</h2>
+            <div class="products" id="make-up-products">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div id="babies" class="page">
+            <h2 data-lang="babies">Babies</h2>
+            <div class="products" id="babies-products">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div id="toys" class="page">
+            <h2 data-lang="toys">Toys</h2>
+            <div class="products" id="toys-products">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div id="kids-clothing" class="page">
+            <h2 data-lang="kids-clothing">Kids Clothing</h2>
+            <div class="products" id="kids-clothing-products">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div id="meats" class="page">
+            <h2 data-lang="meats">Meats</h2>
+            <div class="products" id="meats-products">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div id="sports" class="page">
+            <h2 data-lang="sports">Sports</h2>
+            <div class="products" id="sports-products">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div id="drinks" class="page">
+            <h2 data-lang="drinks">Drinks</h2>
+            <div class="products" id="drinks-products">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Product Page -->
+        <div id="product-page" class="page">
+            <!-- Loading Overlay -->
+            <div id="product-loading" class="loading-overlay">
+                <div class="spinner"></div>
+            </div>
+            <div class="product-page-content">
+                <!-- Image Carousel -->
+                <div class="product-carousel">
+                    <button class="carousel-btn prev" onclick="prevProductImage()">❮</button>
+                    <div id="product-images" class="product-images"></div>
+                    <button class="carousel-btn next" onclick="nextProductImage()">❯</button>
+                </div>
+                <!-- Product Details -->
+                <div class="product-details">
+                    <h2 id="product-page-name" data-lang="product-name"></h2>
+                    <p id="product-page-description" data-lang="product-description"></p>
+                    <div class="product-pricing">
+                        <span id="product-page-price" data-lang="price"></span>
+                        <span id="product-page-discounted-price" class="discounted-price"></span>
+                        <span id="product-page-discount" class="discount-label"></span>
+                    </div>
+                    <div class="product-rating">
+                        <span data-lang="average-rating">Average Rating:</span>
+                        <div id="product-page-stars" class="rating-stars"></div>
+                        <span id="product-page-rating-count"></span>
+                    </div>
+                    <button id="product-page-buy-btn" class="buy-btn-large" onclick="addToCartFromProductPage()" data-lang="buy-now">Buy Now</button>
+                    <button id="product-page-rate-btn" class="rate-btn" onclick="openRatingModal(currentProduct.id)" data-lang="rate-product">Rate Product</button>
+                </div>
+                <!-- Similar Products Scroller -->
+                <div class="similar-products-section">
+                    <h3 data-lang="similar-products">Similar Products</h3>
+                    <div id="similar-products-scroller" class="similar-products-scroller" style="
+    display: flex;
+    overflow: auto;
+    max-width: 100vw;
+    gap: 10px;
+    scroll-behavior: smooth;
+    padding: 10px;
+">
+                        <!-- Similar products will be dynamically inserted here -->
+                    </div>
+                </div>
+                <!-- Back Button -->
+                <button class="back-btn" onclick="backToCategory()" data-lang="back-to-category">Back to Category</button>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settings" class="page">
+            <h2 data-lang="settings">Settings</h2>
+            <form id="update-info-form">
+                <input type="text" id="update-name" data-lang-placeholder="name" required>
+                <input type="email" id="update-email" data-lang-placeholder="email" required>
+                <input type="tel" id="update-phone" data-lang-placeholder="phone" required>
+                <input type="text" id="update-city" data-lang-placeholder="city" required>
+                <input type="text" id="update-neighborhood" data-lang-placeholder="neighborhood" required>
+                <input type="text" id="update-postal-code" data-lang-placeholder="postal-code" required>
+                <button type="submit" data-lang="update-info">Update Info</button>
+            </form>
+            <button id="change-password-btn" data-lang="change-password">Change Password</button>
+            <button id="logout-btn" data-lang="logout">Logout</button>
+        </div>
+
+        <!-- Search Results -->
+        <div id="search-results" class="search-results" style="display: none;">
+            <div class="products" id="search-products-container">
+                <!-- Search results will be dynamically inserted here -->
+            </div>
+            <p id="search-error" style="display: none; color: red;" data-lang="search-error">Search failed or no results found.</p>
+        </div>
+
+        <!-- Order Confirmation -->
+        <div id="order-confirmation" class="order-confirmation"></div>
+
+        <!-- Product Modal -->
+        <div id="product-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-image-container">
+                    <img id="modal-main-image" src="" alt="Product Image">
+                    <div class="carousel">
+                        <button class="carousel-btn prev" onclick="prevImage()">❮</button>
+                        <div id="carousel-thumbnails" class="carousel-thumbnails"></div>
+                        <button class="carousel-btn next" onclick="nextImage()">❯</button>
+                    </div>
+                </div>
+                <p id="modal-description" class="modal-description"></p>
+                <button class="back-btn" onclick="closeProductModal()" data-lang="back-to-shopping">Back to Shopping</button>
+            </div>
+        </div>
+
+        <!-- Contact Modal -->
+        <div id="contact-modal" class="modal">
+            <div class="modal-content">
+                <h2 data-lang="contact-us">Contact Us</h2>
+                <div class="contact-info">
+                    <p><i class="fas fa-envelope"></i> <span id="contact-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1c727d716e755c7b717d7570327f7371">[email&#160;protected]</a></span></p>
+                    <p><i class="fas fa-phone"></i> <span id="contact-phone">(+212607120585)</span></p>
+                </div>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/agadirdelivery" target="_blank" id="facebook-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/otman_namri" target="_blank" id="instagram-link"><i class="fab fa-instagram"></i></a>
+                    <a href="https://twitter.com/agadirdelivery" target="_blank" id="x-link"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://www.linkedin.com/company/agadirdelivery" target="_blank" id="linkedin-link"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <button class="back-btn" onclick="closeContactModal()" data-lang="back-to-shopping">Back to Shopping</button>
+            </div>
+        </div>
+
+        <!-- Authentication Modal -->
+        <div id="auth-modal" class="modal">
+            <div class="modal-content">
+                <!-- Sign In -->
+                <div id="sign-in" class="auth-page active">
+                    <h2 data-lang="sign-in">Sign In</h2>
+                    <form id="sign-in-form">
+                        <input type="email" id="signin-email" data-lang-placeholder="email" required>
+                        <input type="password" id="signin-password" data-lang-placeholder="password" required>
+                        <button type="submit" data-lang="sign-in-btn">Sign In</button>
+                    </form>
+                    <button id="to-sign-up" data-lang="no-account-sign-up">No account? Sign Up</button>
+                    <button id="to-forgot-password" data-lang="forgot-password">Forgot Password?</button>
+                    <button class="back-btn" onclick="closeAuthModal()" data-lang="back-to-shopping">Back to Shopping</button>
+                </div>
+
+                <!-- Sign Up -->
+                <div id="sign-up" class="auth-page">
+                    <h2 data-lang="sign-up">Sign Up</h2>
+                    <form id="sign-up-form">
+                        <input type="text" id="signup-name" data-lang-placeholder="name" required>
+                        <input type="email" id="signup-email" data-lang-placeholder="email" required>
+                        <input type="password" id="signup-password" data-lang-placeholder="password" required>
+                        <input type="text" id="signup-city" data-lang-placeholder="city" required>
+                        <input type="text" id="signup-neighborhood" data-lang-placeholder="neighborhood" required>
+                        <input type="text" id="signup-postal-code" data-lang-placeholder="postal-code" required>
+                        <input type="tel" id="signup-phone" data-lang-placeholder="phone" required>
+                        <button type="submit" data-lang="next">Next</button>
+                    </form>
+                    <button class="back-btn" onclick="closeAuthModal()" data-lang="back-to-shopping">Back to Shopping</button>
+                </div>
+
+                <!-- Verification Code for Sign Up -->
+                <div id="signup-verification" class="auth-page">
+                    <h2 data-lang="verify-email">Verify Your Email</h2>
+                    <form id="signup-verification-form">
+                        <input type="text" id="signup-code" data-lang-placeholder="verification-code" required>
+                        <button type="submit" data-lang="verify">Verify</button>
+                    </form>
+                    <button class="back-btn" onclick="closeAuthModal()" data-lang="back-to-shopping">Back to Shopping</button>
+                </div>
+
+                <!-- Forgot Password -->
+                <div id="forgot-password" class="auth-page">
+                    <h2 data-lang="forgot-password">Forgot Password</h2>
+                    <form id="forgot-password-form">
+                        <input type="email" id="forgot-email" data-lang-placeholder="email" required>
+                        <button type="submit" data-lang="next">Next</button>
+                    </form>
+                    <button class="back-btn" onclick="closeAuthModal()" data-lang="back-to-shopping">Back to Shopping</button>
+                </div>
+
+                <!-- Verification Code for Forgot Password -->
+                <div id="forgot-verification" class="auth-page">
+                    <h2 data-lang="verify-email">Verify Your Email</h2>
+                    <form id="forgot-verification-form">
+                        <input type="text" id="forgot-code" data-lang-placeholder="verification-code" required>
+                        <button type="submit" data-lang="verify">Verify</button>
+                    </form>
+                    <button class="back-btn" onclick="closeAuthModal()" data-lang="back-to-shopping">Back to Shopping</button>
+                </div>
+
+                <!-- Reset Password -->
+                <div id="reset-password" class="auth-page">
+                    <h2 data-lang="reset-password">Reset Password</h2>
+                    <form id="reset-password-form">
+                        <input type="password" id="new-password" data-lang-placeholder="new-password" required>
+                        <button type="submit" data-lang="reset">Reset</button>
+                    </form>
+                    <button class="back-btn" onclick="closeAuthModal()" data-lang="back-to-shopping">Back to Shopping</button>
+                </div>
+
+                <!-- Verification Code for Sign-In (2FA) -->
+                <div id="signin-verification" class="auth-page">
+                    <h2 data-lang="verify-sign-in">Verify Sign-In</h2>
+                    <form id="signin-verification-form">
+                        <input type="text" id="signin-code" data-lang-placeholder="verification-code" required>
+                        <button type="submit" data-lang="verify">Verify</button>
+                    </form>
+                    <button class="back-btn" onclick="closeAuthModal()" data-lang="back-to-shopping">Back to Shopping</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rating Modal -->
+        <div id="rating-modal" class="modal">
+            <div class="modal-content">
+                <h2 id="rating-product-name"></h2>
+                <div class="rating-input">
+                    <span data-lang="rate-product">Rate this product:</span>
+                    <div class="rating-stars-input"></div> <!-- Dynamically populated -->
+                </div>
+                <form id="rating-form">
+                    <input type="text" id="rating-comment" maxlength="30" data-lang-placeholder="add-comment" required>
+                    <button type="submit" data-lang="submit-rating">Submit Rating</button>
+                </form>
+                <div id="existing-comments" class="existing-comments">
+                    <h3 data-lang="customer-reviews">Customer Reviews</h3>
+                    <div id="comments-list"></div>
+                </div>
+                <button class="back-btn" onclick="closeRatingModal()" data-lang="back-to-shopping">Back to Shopping</button>
+            </div>
+        </div>
+    </main>
+
+    <div id="notification" class="notification"></div>
+
+    <footer>
+        <p data-lang="footer">© 2025 Agadir Delivery. All rights reserved.</p>
+        <button id="contact-btn" onclick="openContactModal()" data-lang="follow-contact-us">Follow and Contact Us</button>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="script.js"></script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'926d652cbe9abcf6',t:'MTc0MzA2Mjg1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'926e54783c4f69f3',t:'MTc0MzA3MjY1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92747702a807bfc0',t:'MTc0MzEzNjk4OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9279f76638159ae2',t:'MTc0MzE5NDY3Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9282dceaeef3763d',t:'MTc0MzI4Nzk2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92832dfcf9c60c0a',t:'MTc0MzI5MTI4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>
